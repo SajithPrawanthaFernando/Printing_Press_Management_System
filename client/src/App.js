@@ -1,6 +1,8 @@
 import "./App.css";
 import { useAuthContext } from "../src/hooks/useAuthContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import axios from "axios"; // Import Axios
+
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Home from "./pages/Home";
@@ -17,6 +19,7 @@ import TellUsMore from "./pages/TellUsMore";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Checkout from "./pages/Checkout";
+import Elogin from "./pages/Emplogin";
 
 function PublicLayout() {
   const { user } = useAuthContext();
@@ -37,10 +40,11 @@ function PublicLayout() {
           path="/register"
           element={!user ? <Register /> : <Navigate to="/" />}
         />
+        <Route path="/emplogin" element={<Elogin />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
 
-        <Route path="/products/:productId" element={<ProductDetail />} />
+        <Route path="/product/:productId" element={<ProductDetail />} />
         <Route path="/tell-us-more" element={<TellUsMore />} />
         <Route path="/checkout" element={<Checkout />} />
       </Routes>

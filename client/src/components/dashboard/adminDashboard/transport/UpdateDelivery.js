@@ -2,19 +2,22 @@ import React, { useState, useEffect } from "react";
 import AdminLayout from "../../../Layouts/AdminLayout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const CreateDelivery = () => {
-  const [driverId, setDriverId] = useState("");
+  const [employeeId, setEmployeeId] = useState(""); // Selected employee ID
   const [vehicleId, setVehicleId] = useState("");
   const [productId, setProductId] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [address, setAddress] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [vehicles, setVehicles] = useState([]); // State variable for vehicles
+  const [employees, setEmployees] = useState([]); // State variable for employees
   const navigate = useNavigate();
 
   // State variables for validation errors
-  const [driverIdError, setDriverIdError] = useState("");
+  const [employeeIdError, setEmployeeIdError] = useState("");
+  const [numberError, setNumberError] = useState("");
   const [vehicleIdError, setVehicleIdError] = useState("");
   const [productIdError, setProductIdError] = useState("");
   const [customerIdError, setCustomerIdError] = useState("");
@@ -33,19 +36,36 @@ const CreateDelivery = () => {
     };
 
     fetchVehicles();
-  }, []); // Empty dependency array means this effect runs once on component mount
+  }, []);
+
+  useEffect(() => {
+    // Fetch employee IDs from the server
+    const fetchEmployeeIDs = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/employees/drivers/ids"
+        );
+        const employeeIDs = response.data; // Assuming response.data is an array of employee IDs
+        setEmployees(employeeIDs); // Set the state directly with the array of employee IDs
+      } catch (error) {
+        console.error("Error fetching employee IDs:", error);
+      }
+    };
+
+    fetchEmployeeIDs();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Resetting previous errors
-    clearErrors();
-
     // Validation
     let isValid = true;
 
-    if (!driverId) {
-      setDriverIdError("Driver Id is required");
+    // Resetting previous errors
+    clearErrors();
+
+    if (!employeeId) {
+      setEmployeeIdError("Employee Id is required");
       isValid = false;
     }
 
@@ -56,6 +76,9 @@ const CreateDelivery = () => {
 
     if (!productId) {
       setProductIdError("Product Id is required");
+      isValid = false;
+    } else if (!/^\d+$/.test(productId)) {
+      setNumberError("Vehicle Number must be an integer");
       isValid = false;
     }
 
@@ -77,7 +100,7 @@ const CreateDelivery = () => {
     if (isValid) {
       // Prepare data for submission
       const deliveryData = {
-        driverId,
+        employeeId,
         vehicleId,
         productId,
         customerId,
@@ -91,27 +114,20 @@ const CreateDelivery = () => {
           "http://localhost:5000/api/deliveries/",
           deliveryData
         );
-        console.log(response.data);
-        alert("Delivery added successfully!");
+        Swal.fire("Success", "Delivery added successfully!", "success");
         navigate("/admin/transport/delivery");
       } catch (error) {
-        console.error("Error adding delivery:", error);
-        alert("Failed to add delivery. Please try again.");
+        Swal.fire(
+          "Error",
+          "Failed to add delivery. Please try again.",
+          "error"
+        );
       }
     }
   };
 
-  const clearForm = () => {
-    setDriverId("");
-    setVehicleId("");
-    setProductId("");
-    setCustomerId("");
-    setAddress("");
-    setConfirmed(false);
-  };
-
   const clearErrors = () => {
-    setDriverIdError("");
+    setEmployeeIdError("");
     setVehicleIdError("");
     setProductIdError("");
     setCustomerIdError("");
@@ -127,20 +143,23 @@ const CreateDelivery = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="driverid" className="form-label">
-                Driver Id
+              <label htmlFor="employeeid" className="form-label">
+                Employee ID
               </label>
               <input
                 type="text"
-                className={`form-control ${driverIdError ? "is-invalid" : ""}`}
-                id="driverid"
-                value={driverId}
-                onChange={(e) => setDriverId(e.target.value)}
+                className={`form-control ${employeeIdError ? "is-invalid" : ""
+                  }`}
+                id="employeeid"
+                value={employeeId}
+                onChange={(e) => setEmployeeId(e.target.value)}
+                placeholder="Enter Employee ID"
               />
-              {driverIdError && (
-                <div className="invalid-feedback">{driverIdError}</div>
+              {employeeIdError && (
+                <div className="invalid-feedback">{employeeIdError}</div>
               )}
             </div>
+
             <div className="mb-3">
               <label htmlFor="vehicleid" className="form-label">
                 Vehicle Id
@@ -153,8 +172,8 @@ const CreateDelivery = () => {
               >
                 <option value="">Select Vehicle</option>
                 {vehicles.map((vehicle) => (
-                  <option key={vehicle._id} value={vehicle._id}>
-                    {vehicle.name} - {vehicle.id}
+                  <option key={vehicle.vehicleID} value={vehicle.vehicleID}>
+                    {vehicle.vehicleID}
                   </option>
                 ))}
               </select>
@@ -162,6 +181,7 @@ const CreateDelivery = () => {
                 <div className="invalid-feedback">{vehicleIdError}</div>
               )}
             </div>
+
             <div className="mb-3">
               <label htmlFor="productid" className="form-label">
                 Product Id
@@ -179,13 +199,12 @@ const CreateDelivery = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="customerid" className="form-label">
-                Customer Id
+                Customer Email
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  customerIdError ? "is-invalid" : ""
-                }`}
+                className={`form-control ${customerIdError ? "is-invalid" : ""
+                  }`}
                 id="customerid"
                 value={customerId}
                 onChange={(e) => setCustomerId(e.target.value)}
@@ -212,9 +231,8 @@ const CreateDelivery = () => {
             <div className="mb-3 form-check">
               <input
                 type="checkbox"
-                className={`form-check-input ${
-                  confirmedError ? "is-invalid" : ""
-                }`}
+                className={`form-check-input ${confirmedError ? "is-invalid" : ""
+                  }`}
                 id="confirmed"
                 checked={confirmed}
                 onChange={(e) => setConfirmed(e.target.checked)}

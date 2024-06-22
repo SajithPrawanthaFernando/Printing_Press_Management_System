@@ -26,6 +26,7 @@ const Login = () => {
 
     axios
       .post("http://localhost:5000/auth/login", { email, password })
+
       .then((response) => {
         const { data } = response;
         if (data && data.status) {
@@ -37,13 +38,10 @@ const Login = () => {
           console.log(response.data);
           switch (role) {
             case "admin":
-              navigate("/admin"); // Redirect admin to admin page
-              break;
-            case "employee":
-              navigate("/employee"); // Redirect employee to employee page
+              window.location.href = "/admin";
               break;
             default:
-              navigate("/");
+              window.location.href = "/";
           }
         } else {
           console.log(response);

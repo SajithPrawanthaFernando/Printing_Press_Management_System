@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const userschema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -13,9 +13,6 @@ const userschema = new mongoose.Schema({
   notification: [{ type: String }],
   filename: { type: String },
   role: { type: String },
-  date: { type: Date, default: Date.now },
 });
 
-const usermodel = mongoose.model("user", userschema);
-
-module.exports = { User: usermodel };
+module.exports = mongoose.model('users', userschema);

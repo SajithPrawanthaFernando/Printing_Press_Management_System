@@ -121,9 +121,8 @@ const ChangePassword = () => {
                   </label>
                   <input
                     type="password"
-                    className={`form-control ${
-                      errors.currentPassword ? "is-invalid" : ""
-                    }`}
+                    className={`form-control ${errors.currentPassword ? "is-invalid" : ""
+                      }`}
                     id="currentPassword"
                     value={currentPassword}
                     onChange={handleCurrentPasswordChange}
@@ -141,9 +140,8 @@ const ChangePassword = () => {
                   </label>
                   <input
                     type="password"
-                    className={`form-control ${
-                      errors.newPassword ? "is-invalid" : ""
-                    }`}
+                    className={`form-control ${errors.newPassword ? "is-invalid" : ""
+                      }`}
                     id="newPassword"
                     value={newPassword}
                     onChange={handleNewPasswordChange}
@@ -158,9 +156,8 @@ const ChangePassword = () => {
                   </label>
                   <input
                     type="password"
-                    className={`form-control ${
-                      errors.confirmNewPassword ? "is-invalid" : ""
-                    }`}
+                    className={`form-control ${errors.confirmNewPassword ? "is-invalid" : ""
+                      }`}
                     id="confirmNewPassword"
                     value={confirmNewPassword}
                     onChange={handleConfirmNewPasswordChange}

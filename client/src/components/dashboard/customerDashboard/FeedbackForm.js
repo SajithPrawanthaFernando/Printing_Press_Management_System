@@ -119,9 +119,8 @@ const FeedbackForm = () => {
                     Feedback:
                   </label>
                   <textarea
-                    className={`form-control ${
-                      errors.feedback ? "is-invalid" : ""
-                    }`}
+                    className={`form-control ${errors.feedback ? "is-invalid" : ""
+                      }`}
                     id="feedback"
                     rows="4"
                     placeholder="Enter your feedback"

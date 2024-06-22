@@ -41,7 +41,7 @@ const CustomerDashboard = () => {
         setAddress(result.data.address);
         setProfileImagePath(result.data.profileImagePath);
         const filename = result.data.filename; // Store filename in a variable
-        console.log(filename);
+        console.log(result);
 
         // Fetch the image using the filename
         Axios.get(`http://localhost:5000/auth/images/` + filename, {
@@ -262,9 +262,8 @@ const CustomerDashboard = () => {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    errors.firstname ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.firstname ? "is-invalid" : ""
+                    }`}
                   id="firstname"
                   value={firstname}
                   onChange={handleFirstNameChange}
@@ -280,9 +279,8 @@ const CustomerDashboard = () => {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    errors.username ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.username ? "is-invalid" : ""
+                    }`}
                   id="username"
                   value={username}
                   onChange={handleUserNameChange}
@@ -314,9 +312,8 @@ const CustomerDashboard = () => {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    errors.address ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.address ? "is-invalid" : ""
+                    }`}
                   id="address"
                   value={address}
                   onChange={handleAddressChange}
@@ -343,9 +340,8 @@ const CustomerDashboard = () => {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    errors.lastname ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.lastname ? "is-invalid" : ""
+                    }`}
                   id="lastname"
                   value={lastname}
                   onChange={handleLastNameChange}
