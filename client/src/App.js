@@ -54,6 +54,7 @@ function PublicLayout() {
 }
 
 function App() {
+  const { user } = useAuthContext();
   return (
     <BrowserRouter>
       <Routes>
@@ -61,7 +62,9 @@ function App() {
         <Route path="/*" element={<PublicLayout />} />
 
         {/* Admin Routes */}
-        <Route path="/admin/*" element={<AdminRoutes />} />
+        {user && user.role === "admin" && (
+          <Route path="/admin/*" element={<AdminRoutes />} />
+        )}
 
         {/* Customer Routes */}
         <Route path="/user/*" element={<CustomerRoutes />} />

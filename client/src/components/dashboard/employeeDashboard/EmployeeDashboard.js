@@ -25,18 +25,21 @@ const EmployeeDashboard = () => {
     if (user && user.email) {
       const employeeId = user.email;
       axios
-        .get(`http://localhost:5000/employeeLeave/getLeaveByEmail/${employeeId}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        })
+        .get(
+          `http://localhost:5000/employeeLeave/getLeaveByEmail/${employeeId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        )
         .then((result) => setEmployeeLeaves(result.data))
         .catch((err) => console.log(err));
     }
   }, [user]);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.email) {
       axios
         .get(`http://localhost:5000/employees/` + user.email, {
           headers: {
@@ -60,7 +63,9 @@ const EmployeeDashboard = () => {
     }
   }, [user]);
 
-  const approvedLeaves = employeeLeaves.filter(leave => leave.status === 'Approved');
+  const approvedLeaves = employeeLeaves.filter(
+    (leave) => leave.status === "Approved"
+  );
 
   return (
     <>
